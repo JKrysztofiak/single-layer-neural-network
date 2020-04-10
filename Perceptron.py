@@ -47,7 +47,8 @@ class Perceptron:
 
     
     def training(self, trainSet: list, trueRes: str, alfa: float):
-        net = calculate_net(self.weights, trainSet)
+        # net = calculate_net(self.weights, trainSet)
+        net = calculate_net(multiply_vector(self.weights, (1.0/vector_length(self.weights))),multiply_vector(trainSet, (1.0/vector_length(trainSet))))
 
         res = 0
         if net > self.t:
@@ -56,24 +57,41 @@ class Perceptron:
         # print(f"{self.group}: {res}")
         # print(f"TrueRes: {trueRes} Perceptron: {self.group} res: {res}")
 
-        if res == 0 and trueRes == self.group:
-            #uczenie
-            wprim = delta_rule(self.weights, 1, 0, alfa, trainSet, self.t)
-            self.t = float(wprim[-1])
-            self.weights = wprim[:-1]
-            return
-            
         
-        if res == 1 and trueRes != self.group:
+        # i=0
+
+        while (res == 0 and trueRes == self.group) or (res == 1 and trueRes != self.group):
+                        
             #uczenie
-            wprim = delta_rule(self.weights, 0, 1, alfa, trainSet, self.t)
+            # print(f"UCZENIE {i}")
+            # i+=1
+
+            d = 1
+            y = 0
+            if res == 1:
+                d = 0
+                y = 1
+
+            wprim = delta_rule(self.weights, d, y, alfa, trainSet, self.t)         
             self.t = float(wprim[-1])
             self.weights = wprim[:-1]
-            return
 
+            # net = calculate_net(self.weights, trainSet)
+            net = calculate_net(multiply_vector(self.weights, (1.0/vector_length(self.weights))),multiply_vector(trainSet, (1.0/vector_length(trainSet))))
+
+            res = 0
+            if net > self.t:
+                res = 1
+            
 
     def testing(self, testSet: list) -> int:
         net = calculate_net(multiply_vector(self.weights, (1.0/vector_length(self.weights))),multiply_vector(testSet, (1.0/vector_length(testSet))))
-        return net
+        # net = calculate_net(self.weights,testSet)
+
+        res = 0
+        if net > self.t:
+            res = 1
+        # return net
+        return res
         
         
