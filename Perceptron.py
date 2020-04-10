@@ -1,4 +1,11 @@
 from random import randint
+import math
+
+def vector_length(v: list) -> float:
+    value = 0
+    for x in v:
+        value+=pow(x,2)
+    return math.sqrt(value)
 
 def multiply_vector(v: list, m: float) -> list:
     res = []
@@ -40,17 +47,21 @@ class Perceptron:
 
     
     def training(self, trainSet: list, trueRes: str, alfa: float):
-           net = calculate_net(self.weights, trainSet)
+        net = calculate_net(self.weights, trainSet)
 
         res = 0
         if net > self.t:
             res = 1
+
+        # print(f"{self.group}: {res}")
+        # print(f"TrueRes: {trueRes} Perceptron: {self.group} res: {res}")
 
         if res == 0 and trueRes == self.group:
             #uczenie
             wprim = delta_rule(self.weights, 1, 0, alfa, trainSet, self.t)
             self.t = float(wprim[-1])
             self.weights = wprim[:-1]
+            return
             
         
         if res == 1 and trueRes != self.group:
@@ -58,5 +69,11 @@ class Perceptron:
             wprim = delta_rule(self.weights, 0, 1, alfa, trainSet, self.t)
             self.t = float(wprim[-1])
             self.weights = wprim[:-1]
+            return
+
+
+    def testing(self, testSet: list) -> int:
+        net = calculate_net(multiply_vector(self.weights, (1.0/vector_length(self.weights))),multiply_vector(testSet, (1.0/vector_length(testSet))))
+        return net
         
         
