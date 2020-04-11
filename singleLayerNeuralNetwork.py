@@ -61,7 +61,7 @@ for root, subdirs, files in os.walk(path):
 
 perceptrons = []
 weights = [randint(-10,10) for x in range(0,26)]
-t = randint(-10,10)
+t = randint(-5,5)
 for g in groups:
     # perceptrons.append(Perceptron.Perceptron(26,g))
     perceptrons.append(Perceptron.Perceptron(weights, t, g))
