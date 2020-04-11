@@ -2,6 +2,8 @@ import os
 import Perceptron
 import string
 import random
+from random import randint
+import tkinter as tk
 
 
 def countLetters(text: str) -> list:
@@ -18,6 +20,28 @@ def countLetters(text: str) -> list:
 
     return letters
 
+def testLayer(data: list) -> str:
+    res = {}
+
+    for perc in perceptrons:
+        res[perc.group] = perc.testing(data)
+
+    result = perceptrons[0].group
+    max = res[perceptrons[0].group]
+    for key in res:
+        if res[key] > max:
+            result = key
+            max = res[key]
+
+    return result
+
+
+def retrieve_input():
+    inputValue=textBox.get("1.0","end-1c")
+
+    letters = countLetters(inputValue)
+
+    label.config(text=testLayer(letters))
 
 
 
@@ -34,11 +58,16 @@ for root, subdirs, files in os.walk(path):
         if '.txt' in file:
             dirs.append(os.path.join(root,file))
 
+
 perceptrons = []
+weights = [randint(-10,10) for x in range(0,26)]
+t = randint(-10,10)
 for g in groups:
-    perceptrons.append(Perceptron.Perceptron(26,g))
+    # perceptrons.append(Perceptron.Perceptron(26,g))
+    perceptrons.append(Perceptron.Perceptron(weights, t, g))
 
 random.shuffle(dirs)
+
 
 for file in dirs:
     group = ""
@@ -54,11 +83,10 @@ for file in dirs:
     letters = countLetters(text)
 
     for per in perceptrons:
-        per.training(letters, group, 0.5)
+        per.training(letters, group, 0.6)
 
     for per in perceptrons:
         print(f"{per.group}: ",per.testing(letters))
-
    
 
 print("###############@@@@@@@@@@@@@@@@@@@@@@##################@@@@@@@@@@@@@@@@@###########")
@@ -78,34 +106,19 @@ for root, subdirs, files in os.walk(path):
             for p in perceptrons:
                 print(p.group,": ", p.testing(letters))
 
-            
-            # res = {}
-            # res[p1.group] = p1.testing(letters)
-            # res[p2.group] = p2.testing(letters)
-            # res[p3.group] = p3.testing(letters)
 
-            # result = p1.group
-            # max = res[p1.group]
-            # for key in res:
-            #     if res[key] > max:
-            #         result = key
-            #         max = res[key]
+root=tk.Tk(className="Language Classificator")
 
-            # print("ODP: ",result)
-            # print("###")
+root.geometry("500x500")
+
+textBox=tk.Text(root, height=2, width=10)
+textBox.pack(fill=tk.BOTH, expand=1)
+
+buttonCommit=tk.Button(root, height=1, width=10, text="TEST", 
+                    command=lambda: retrieve_input())
+buttonCommit.pack(side=tk.BOTTOM)
+label = tk.Label(root, text="")
+label.pack()
 
 
-
-
-# while True:
-#     inp = input("TEXT: ")
-
-#     if inp.lower() == "exit":
-#         break
-
-#     let = countLetters(inp)
-
-#     print(p1.testing(let))
-#     print(p2.testing(let))
-#     print(p3.testing(let))
-
+tk.mainloop()
