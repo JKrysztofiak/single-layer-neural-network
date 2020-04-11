@@ -62,14 +62,19 @@ for root, subdirs, files in os.walk(path):
 perceptrons = []
 weights = [randint(-10,10) for x in range(0,26)]
 t = randint(-5,5)
+
 for g in groups:
     # perceptrons.append(Perceptron.Perceptron(26,g))
     perceptrons.append(Perceptron.Perceptron(weights, t, g))
 
-random.shuffle(dirs)
+shuffledDirs = dirs.copy()
+
+random.shuffle(shuffledDirs)
+
+# random.shuffle(dirs)
 
 
-for file in dirs:
+for file in shuffledDirs:
     group = ""
     for g in groups:
         if g in file:
@@ -83,28 +88,34 @@ for file in dirs:
     letters = countLetters(text)
 
     for per in perceptrons:
-        per.training(letters, group, 0.6)
+            per.training(letters, group, 0.6)
 
-    for per in perceptrons:
-        print(f"{per.group}: ",per.testing(letters))
+    # for per in perceptrons:
+    #     print(f"{per.group}: ",per.testing(letters))
    
 
 print("###############@@@@@@@@@@@@@@@@@@@@@@##################@@@@@@@@@@@@@@@@@###########")
+q=0
+a=0
+for file in dirs:
+    a+=1
+    group = ""
+    for g in groups:
+        if g in file:
+            group = g
 
-for root, subdirs, files in os.walk(path):
-    group = root[5:]
-    for file in files:
-        if '.txt' in file:
-            tmpPath = os.path.join(root,file)
+    with open(file, 'r') as f:
+        text = f.read()
 
-            with open(tmpPath, 'r') as f:
-                text = f.read()
+    letters = countLetters(text)
 
-            letters = countLetters(text)
+    print("TO TEST: ",group)
+    res = testLayer(letters)
+    print("RES: ",res)
+    if res == group: q+=1
 
-            print("TO TEST: ",group)
-            for p in perceptrons:
-                print(p.group,": ", p.testing(letters))
+print(f"ACCURACY {q}/{a} = {q/a}")
+
 
 
 root=tk.Tk(className="Language Classificator")

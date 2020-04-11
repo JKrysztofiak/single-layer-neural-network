@@ -53,6 +53,7 @@ class Perceptron:
         self.weights = w.copy()
         self.t = t
         self.group = group
+
     
     def training(self, trainSet: list, trueRes: str, alfa: float):
         net = calculate_net(self.weights, trainSet)
@@ -91,6 +92,8 @@ class Perceptron:
             res = 0
             if net > self.t:
                 res = 1
+
+        print(f"[{self.group}] t={self.t} ") #| weights {self.weights} 
             
 
     def testing(self, testSet: list) -> int:
