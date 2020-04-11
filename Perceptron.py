@@ -55,16 +55,12 @@ class Perceptron:
         self.group = group
     
     def training(self, trainSet: list, trueRes: str, alfa: float):
-
-        # net = calculate_net(self.weights, trainSet)
-        net = calculate_net(multiply_vector(self.weights, (1.0/vector_length(self.weights))),multiply_vector(trainSet, (1.0/vector_length(trainSet))))
+        net = calculate_net(self.weights, trainSet)
+        # net = calculate_net(multiply_vector(self.weights, (1.0/vector_length(self.weights))),multiply_vector(trainSet, (1.0/vector_length(trainSet))))
 
         res = 0
         if net > self.t:
             res = 1
-
-        # print(f"{self.group}: {res}")
-        # print(f"TrueRes: {trueRes} Perceptron: {self.group} res: {res}")
 
         
         i=0
@@ -81,16 +77,16 @@ class Perceptron:
                 d = 0
                 y = 1
 
-            # wprim = delta_rule(self.weights, d, y, alfa, trainSet, self.t)
-            wprim = delta_rule(multiply_vector(self.weights, (1.0/vector_length(self.weights))), d, y, alfa, multiply_vector(trainSet, (1.0/vector_length(trainSet))), self.t)          
+            wprim = delta_rule(self.weights, d, y, alfa, trainSet, self.t)
+            # wprim = delta_rule(multiply_vector(self.weights, (1.0/vector_length(self.weights))), d, y, alfa, multiply_vector(trainSet, (1.0/vector_length(trainSet))), self.t)          
             
             self.t = float(wprim[-1])
             self.weights = wprim[:-1]
 
             
 
-            # net = calculate_net(self.weights, trainSet)
-            net = calculate_net(multiply_vector(self.weights, (1.0/vector_length(self.weights))),multiply_vector(trainSet, (1.0/vector_length(trainSet))))
+            net = calculate_net(self.weights, trainSet)
+            # net = calculate_net(multiply_vector(self.weights, (1.0/vector_length(self.weights))),multiply_vector(trainSet, (1.0/vector_length(trainSet))))
 
             res = 0
             if net > self.t:
@@ -99,11 +95,11 @@ class Perceptron:
 
     def testing(self, testSet: list) -> int:
         net = calculate_net(multiply_vector(self.weights, (1.0/vector_length(self.weights))),multiply_vector(testSet, (1.0/vector_length(testSet))))
-        # net = calculate_net(self.weights,testSet)
+        #net = calculate_net(self.weights,testSet)
 
         res = 0
         if net > self.t:
             res = 1
 
-        # return net
-        return res
+        return net
+        # return res
