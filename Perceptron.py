@@ -71,7 +71,7 @@ class Perceptron:
 
         while (res == 0 and trueRes == self.group) or (res == 1 and trueRes != self.group):
                         
-            #uczenie
+            # uczenie
             # print(f"UCZENIE {i}")
             # i+=1
 
